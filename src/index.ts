@@ -3,6 +3,8 @@ import { ApolloServer } from "apollo-server-express";
 import Express from "express";
 import { buildSchema, formatArgumentValidationError } from "type-graphql";
 import { createConnection } from "typeorm";
+
+import sessionConfig from "./config/sessionConfig";
 import { RegisterResolver } from "./modules/user/Register";
 
 const main = async () => {
@@ -18,6 +20,8 @@ const main = async () => {
   });
 
   const app = Express();
+
+  app.use(() => sessionConfig);
 
   apolloServer.applyMiddleware({ app });
 
