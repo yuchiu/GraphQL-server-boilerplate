@@ -1,10 +1,13 @@
-import { Resolver, Mutation, Query, Arg } from "type-graphql";
+import { Resolver, Mutation, Query, Arg, UseMiddleware } from "type-graphql";
 import bcrypt from "bcryptjs";
 import { User } from "../../entity/User";
 import { RegisterInput } from "./register/RegisterInput";
+import { isAuthenticated } from "../../middlewares/isAuthenticated";
 
 @Resolver()
 export class RegisterResolver {
+  // test query that require user to be authenticated before accessing
+  @UseMiddleware(isAuthenticated)
   @Query(() => String)
   async hello() {
     return "hello world";
