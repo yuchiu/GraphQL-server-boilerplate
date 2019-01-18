@@ -10,13 +10,12 @@ const sessionConfig = {
   store: new RedisStore({
     client: redisClient as any
   }),
-  secret: SESSION_SECRET,
-  name: SESSION_NAME,
+  secret: SESSION_SECRET || "sdasopdakdsaodasokopadks",
+  name: SESSION_NAME || "typegraphqlqid",
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    path: "/",
     secure: NODE_ENV === "production",
     maxAge: 604800000 // 1000 * 60 * 60 * 24 * 7 * 4 in milliseconds
   }
