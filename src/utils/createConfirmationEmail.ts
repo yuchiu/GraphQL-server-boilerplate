@@ -9,14 +9,9 @@ export const createConfirmationUrl = async (
   redisPrefix: string,
   apiEndPoint: string
 ) => {
-  const confirmationToken = createUUID();
+  const token = createUUID();
 
-  await redisClient.set(
-    redisPrefix + confirmationToken,
-    userId,
-    "ex",
-    emailExpirationTime
-  );
+  await redisClient.set(redisPrefix + token, userId, "ex", emailExpirationTime);
 
-  return `http://localhost:3000${apiEndPoint}/${confirmationToken}`;
+  return `http://localhost:3000${apiEndPoint}/${token}`;
 };

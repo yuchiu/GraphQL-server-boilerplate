@@ -1,12 +1,12 @@
 import { Resolver, Mutation, Query, Arg, UseMiddleware } from "type-graphql";
-import bcrypt from "bcryptjs";
 
 import { User } from "../../entity/User";
-import { RegisterInput } from "./register/RegisterInput";
+import { RegisterInput } from "../../types/register/RegisterInput";
 import { isAuthenticated } from "../../middlewares/isAuthenticated";
 import { sendEmail } from "../../utils/sendEmail";
 import { createConfirmationUrl } from "../../utils/createConfirmationEmail";
-import { confirmationPrefix } from "../../utils/redisPrefix";
+import { confirmUserPrefix } from "../../utils/redisPrefix";
+import { hashPassword } from "../../utils/hashPassword";
 
 @Resolver()
 export class RegisterResolver {
@@ -25,7 +25,7 @@ export class RegisterResolver {
     lastName,
     password
   }: RegisterInput): Promise<User> {
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await hashPassword(password);
 
     const user = await User.create({
       firstName,
@@ -35,7 +35,7 @@ export class RegisterResolver {
     }).save();
     await sendEmail(
       email,
-      await createConfirmationUrl(user.id, confirmationPrefix, "/user/confirm")
+      await createConfirmationUrl(user.id, confirmUserPrefix, "/user/confirm")
     );
     return user;
   }
